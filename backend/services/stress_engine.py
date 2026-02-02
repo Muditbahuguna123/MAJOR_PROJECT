@@ -10,7 +10,7 @@ def evaluate_stress(avg_temp, avg_hum):
     
 def log_alert(severity, message):
     db = get_db()
-    db.execute(""""
-               INSERT INTO alert(severity, message) VALUES(?,?)
+    db.execute("""
+               INSERT INTO alerts(severity, message) VALUES(?,?)
                """,(severity, message))
     db.commit()
