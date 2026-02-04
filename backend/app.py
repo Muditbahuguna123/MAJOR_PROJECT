@@ -3,12 +3,14 @@ from flask_cors import CORS
 from models import init_db
 from routes.sensor_routes import sensor_bp
 from routes.analytics_routes import analytics_bp
+from routes.ml_routes import ml_bp
 
 app = Flask(__name__)
 CORS(app)
 
 init_db()
 app.register_blueprint(sensor_bp)
+app.register_blueprint(ml_bp)
 app.register_blueprint(analytics_bp)
 
 if __name__ == "__main__":
