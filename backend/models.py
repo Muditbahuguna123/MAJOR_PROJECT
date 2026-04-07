@@ -6,7 +6,14 @@ def init_db():
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS sensor_data (
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        temperature REAL, humidity REAL, 
+        temperature REAL,
+        humidity REAL,
+        soil_moisture REAL,
+        rainfall_mm REAL,
+        sunlight_hours REAL,
+        wind_speed_kmh REAL,
+        soil_ph REAL,
+        irrigation_need TEXT,
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     ) """)
     cursor.execute("""CREATE TABLE IF NOT EXISTS alerts (
