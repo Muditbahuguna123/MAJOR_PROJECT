@@ -44,6 +44,26 @@ export default function Dashboard() {
           title="Avg Humidity"
           value={`${data.averages.avg_humidity} %`}
         />
+        <SensorCard
+          title="Avg Rainfall"
+          value={`${data.averages.avg_rainfall_mm} %`}
+        />
+        <SensorCard
+          title="Avg Soil Moisture"
+          value={`${data.averages.avg_soil_moisture} %`}
+        />
+        <SensorCard
+          title="Avg Soil PH"
+          value={`${data.averages.avg_soil_ph} %`}
+        />
+        <SensorCard
+          title="Avg Sunlight Hours"
+          value={`${data.averages.avg_soil_ph} %`}
+        />
+        <SensorCard
+          title="Avg Wind Speed"
+          value={`${data.averages.avg_wind_speed_kmh} %`}
+        />
       </div>
 
       <StressStatus
