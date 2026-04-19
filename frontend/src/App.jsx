@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Dashboard from "./pages/Dashboard";
 import CropRecommendation from "./pages/CropRecommendation";
+import DiseaseDetection from "./pages/DiseaseDetection";
 
 function App() {
   const [page, setPage] = useState("dashboard");
@@ -14,10 +15,14 @@ function App() {
         <button onClick={() => setPage("crop")}>
           Crop Recommendation
         </button>
+        <button onClick={() => setPage("disease")}>
+          Disease Detection
+        </button>
       </div>
 
       {page === "dashboard" && <Dashboard />}
       {page === "crop" && <CropRecommendation />}
+      {page === "disease" && <DiseaseDetection />}
     </div>
   );
 }
