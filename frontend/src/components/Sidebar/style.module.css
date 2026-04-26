@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap');
+
+.sidebar {
+    width: 220px;
+    background: #ffffff;
+    border-right: 0.5px solid rgba(26, 26, 24, 0.09);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ─── Logo ──────────────────────────────────── */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 20px 18px 18px;
+    border-bottom: 0.5px solid rgba(26, 26, 24, 0.07);
+    margin-bottom: 8px;
+}
+
+.logoMark {
+    width: 30px;
+    height: 30px;
+    background: #f0f4ee;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.logoText {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    color: #1a1a18;
+}
+
+/* ─── Nav group label ───────────────────────── */
+.navGroup {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #b5b5a8;
+    padding: 12px 18px 5px;
+    margin: 0;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    margin: 1px 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #6b6b60;
+    text-decoration: none;
+    transition: background 0.13s ease, color 0.13s ease;
+}
+
+.navItem:hover {
+    background: #f7f6f3;
+    color: #1a1a18;
+}
+
+.navItem.active {
+    background: #f0f4ee;
+    color: #2d5a16;
+    font-weight: 500;
+}
+
+.navIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 0.13s ease;
+    color: inherit;
+}
+
+.navItem:hover .navIcon,
+.navItem.active .navIcon {
+    opacity: 1;
+}
+
+.navItem.active .navIcon {
+    color: #5a9a2a;
+}
+
+.navLabel {
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

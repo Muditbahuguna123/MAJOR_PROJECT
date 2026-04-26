@@ -1,0 +1,92 @@
+.card {
+  background: #e9edea;
+  border: none;
+  border-radius: 16px;
+  padding: 20px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+  margin-top: -25px;
+}
+
+.card:hover {
+  border-color: #2d4a38;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  transform: translateY(-2px);
+}
+
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5f8a6b;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Ring chart */
+.ring {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.track {
+  fill: none;
+  stroke: #112018;
+  stroke-width: 7;
+}
+
+.prog {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 201;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+.pct {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Info */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stressLabel {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.stressText {
+  font-size: 12px;
+  color: #5f8a6b;
+  margin: 0;
+  line-height: 1.5;
+}

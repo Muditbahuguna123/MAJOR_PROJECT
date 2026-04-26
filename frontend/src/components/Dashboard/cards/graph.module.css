@@ -1,0 +1,29 @@
+.card {
+  background: #e9edea;
+  border: none;
+  border-radius: 16px;
+  padding: 20px 18px 12px;
+}
+
+.tooltip {
+  background: #e9edea;
+  border: 1px solid #2d4a38;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.tooltipLabel {
+  color: #5f8a6b;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.tooltipRow {
+  margin: 3px 0;
+  color: #cfe8d5;
+}
