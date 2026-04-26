@@ -95,9 +95,9 @@ export default function Dashboard() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // Auto-refresh every 30s
+  // Auto-refresh every 3s so simulated rows appear in near real-time.
   useEffect(() => {
-    const id = setInterval(fetchData, 30000);
+    const id = setInterval(fetchData, 3000);
     return () => clearInterval(id);
   }, [fetchData]);
 
