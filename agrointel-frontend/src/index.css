@@ -1,0 +1,165 @@
+:root {
+  /* Light sage background */
+  --bg: #f2f5f2;
+  --bg-card: #ffffff;
+  --bg-hover: #edf1ed;
+  --border: #d8e3d8;
+  --border-light: #c8d8c8;
+
+  --text-primary: #1e2b1f;
+  --text-secondary: #4d6450;
+  --text-muted: #8aaa8d;
+
+  /* Sage green */
+  --green: #5a8f62;
+  --green-dim: #d4e8d6;
+  --green-glow: rgba(90, 143, 98, 0.15);
+  --green-subtle: rgba(90, 143, 98, 0.08);
+
+  /* Supporting palette — warm & earthy */
+  --amber: #9a6f2e;
+  --amber-dim: rgba(154, 111, 46, 0.1);
+  --red: #b85c5c;
+  --red-dim: rgba(184, 92, 92, 0.1);
+  --blue: #3d7a8a;
+  --blue-dim: rgba(61, 122, 138, 0.1);
+
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --transition: 0.18s ease;
+
+  --shadow-card: 0 0 0 1px var(--border), 0 2px 12px rgba(30,43,31,0.07);
+  --shadow-glow: 0 0 20px var(--green-glow);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Utility */
+.mono { font-family: var(--font-mono); }
+.text-green { color: var(--green); }
+.text-amber { color: var(--amber); }
+.text-red { color: var(--red); }
+.text-blue { color: var(--blue); }
+.text-muted { color: var(--text-secondary); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 1px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--green-dim);
+  color: var(--green);
+  border-color: var(--green-dim);
+}
+.btn-primary:hover {
+  background: rgba(35, 134, 54, 0.5);
+  box-shadow: var(--shadow-glow);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-light);
+}
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Card */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.badge-green { background: var(--green-subtle); color: var(--green); border: 1px solid rgba(63,185,80,0.2); }
+.badge-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(210,153,34,0.25); }
+.badge-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,81,73,0.25); }
+.badge-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(88,166,255,0.2); }
+
+/* Input */
+.input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  transition: border-color var(--transition);
+  outline: none;
+}
+.input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-subtle);
+}
+.input::placeholder { color: var(--text-muted); }
+
+/* Fade-in animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.35s ease both; }
+
+/* Pulse dot */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease infinite;
+  display: inline-block;
+}

@@ -1,0 +1,149 @@
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+.prediction-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.prediction-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pred-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pred-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pred-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Crop card */
+.prediction-crop { border-color: rgba(63,185,80,0.2); }
+.prediction-crop .pred-main { color: var(--green); }
+
+/* Irrigation */
+.prediction-irrigation.needs-water { border-color: rgba(88,166,255,0.2); }
+.prediction-irrigation.needs-water .pred-main { color: var(--blue); }
+.prediction-irrigation.no-water { border-color: rgba(63,185,80,0.15); }
+.prediction-irrigation.no-water .pred-main { color: var(--green); }
+
+/* Stress */
+.stress-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.stress-badge.low { background: var(--green-subtle); color: var(--green); }
+.stress-badge.moderate { background: var(--amber-dim); color: var(--amber); }
+.stress-badge.high { background: var(--red-dim); color: var(--red); }
+
+/* Confidence bar */
+.pred-confidence {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.conf-bar {
+  flex: 1;
+  height: 3px;
+  background: var(--border-light);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.conf-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+/* Chart */
+.chart-card {
+  padding: 20px 20px 14px;
+}
+.chart-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.chart-tooltip {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+}
+.tooltip-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Error banner */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--amber-dim);
+  border: 1px solid rgba(210,153,34,0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--amber);
+  margin-bottom: 20px;
+}
+.error-banner code {
+  background: rgba(210,153,34,0.15);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+/* Spin animation for loading icon */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 1s linear infinite; }
+
+@media (max-width: 960px) {
+  .prediction-row { grid-template-columns: 1fr; }
+}
