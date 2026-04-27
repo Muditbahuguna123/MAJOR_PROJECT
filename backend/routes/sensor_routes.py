@@ -108,7 +108,7 @@ def get_sensor_history():
     return jsonify(history)
 
 
-@sensor_bp.route("/sensor/simulate", methods=["POST"])
+'''@sensor_bp.route("/sensor/simulate", methods=["POST"])
 def simulate_sensor_data():
     payload = {
         "temperature": round(random.uniform(20.0, 40.0), 2),
@@ -157,4 +157,4 @@ def simulate_sensor_data():
         LIMIT 1
         """
     ).fetchone()
-    return jsonify(_row_to_dict(row)), 201
+    return jsonify(_row_to_dict(row)), 201'''

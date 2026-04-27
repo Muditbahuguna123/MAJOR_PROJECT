@@ -17,6 +17,7 @@ def layer1_status():
         averages["avg_humidity"]
     )
     
+    # im thinking about removing this log_alert since stress can be called using this api, it is calculated anove and returned below
     if stress == "High":
         log_alert("HIGH", "Heat stress detected")
 
@@ -25,7 +26,7 @@ def layer1_status():
         "stress_level": stress
     })
 
-
+# im thinking about removing this as well since this just feel an extra to the above api route only
 @analytics_bp.route("/analytics/summary")
 def analytics_summary():
     return layer1_status()
