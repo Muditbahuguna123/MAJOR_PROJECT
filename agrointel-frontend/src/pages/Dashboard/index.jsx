@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   Thermometer, Droplets, CloudRain, Sun, Wind, FlaskConical,
-  Sprout, Waves, RefreshCw, AlertTriangle, CheckCircle2
+  Sprout, Waves, AlertTriangle, CheckCircle2
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
 import StatCard from '../../components/StatCard';
-import { getSensorData, getSensorHistory, simulateSensor, getCropRecommendation, getIrrigationPrediction } from '../../api';
+import { getSensorData, getSensorHistory, getCropRecommendation, getIrrigationPrediction } from '../../api';
 import './Dashboard.css';
 
 const MOCK_HISTORY = Array.from({ length: 30 }, (_, i) => ({
@@ -37,7 +37,6 @@ export default function Dashboard() {
   const [prediction, setPrediction] = useState(null);
   const [irrigation, setIrrigation] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [simulating, setSimulating] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
@@ -95,23 +94,11 @@ export default function Dashboard() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // Auto-refresh every 3s so simulated rows appear in near real-time.
+  // Auto-refresh every 30s
   useEffect(() => {
-    const id = setInterval(fetchData, 3000);
+    const id = setInterval(fetchData, 30000);
     return () => clearInterval(id);
   }, [fetchData]);
-
-  const handleSimulate = async () => {
-    setSimulating(true);
-    try {
-      await simulateSensor();
-      await fetchData();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setSimulating(false);
-    }
-  };
 
   const s = sensor || {};
   const needsIrrigation = irrigation?.irrigation_needed ?? irrigation?.prediction === 'Yes';
@@ -124,12 +111,7 @@ export default function Dashboard() {
           <h1 className="page-title">Dashboard</h1>
           <p className="page-subtitle">Live environmental monitoring &amp; predictions</p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={handleSimulate} disabled={simulating}>
-            <RefreshCw size={14} className={simulating ? 'spin' : ''} />
-            {simulating ? 'Simulating…' : 'Use Simulated Data'}
-          </button>
-        </div>
+
       </div>
 
       {error && (
