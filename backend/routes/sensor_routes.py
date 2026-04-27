@@ -20,7 +20,6 @@ def _row_to_dict(row):
     }
 
 @sensor_bp.route("/sensor-data", methods=["POST"])
-
 def receive_sensor_data():
     data = request.json or {}
 

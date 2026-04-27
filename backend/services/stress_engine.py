@@ -2,11 +2,11 @@ from database import get_db
 
 def evaluate_stress(avg_temp, avg_hum):
     if avg_temp > 35 and avg_hum < 40:
-        return "High", "Increase irrigation frequency"
+        return "High"
     elif 30 <= avg_temp <= 35:
-        return "Moderate", "Monitor conditions"
+        return "Moderate"
     else:
-        return "Low", "Normal irrigation"
+        return "Low"
     
 def log_alert(severity, message):
     db = get_db()

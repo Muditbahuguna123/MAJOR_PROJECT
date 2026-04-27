@@ -34,7 +34,7 @@ def predict_crop_api():
 
 
 @ml_bp.route("/ml/crop", methods=["POST"])
-def predict_crop_frontend_api():
+def predict_crop_compat_api():
     data = request.json or {}
 
     try:
@@ -100,5 +100,5 @@ def detect_disease_api():
 
 
 @ml_bp.route("/ml/disease", methods=["POST"])
-def detect_disease_frontend_api():
+def detect_disease_compat_api():
     return detect_disease_api()
