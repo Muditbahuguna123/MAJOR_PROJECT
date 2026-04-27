@@ -6,14 +6,13 @@ from services.stress_engine import evaluate_stress, log_alert
 analytics_bp = Blueprint("analytics",__name__)
 
 @analytics_bp.route("/layer1-status")
-
 def layer1_status():
     averages = get_recent_averages()
 
     if not averages:
         return jsonify({"message": "No data"})
     
-    stress, irrigation = evaluate_stress(
+    stress = evaluate_stress(
         averages["avg_temperature"],
         averages["avg_humidity"]
     )
@@ -23,6 +22,10 @@ def layer1_status():
 
     return jsonify({
         "averages": averages,
-        "stress_level": stress,
-        "irrigation_signal": irrigation
+        "stress_level": stress
     })
+
+
+@analytics_bp.route("/analytics/summary")
+def analytics_summary():
+    return layer1_status()
