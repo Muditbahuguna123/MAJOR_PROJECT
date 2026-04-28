@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import {
-  LayoutDashboard, Leaf, BarChart2, Sprout, Settings
+  LayoutDashboard, Leaf, BarChart2, Sprout, Settings, CloudRain
 } from 'lucide-react';
 import './Layout.css';
 
@@ -9,6 +9,7 @@ const NAV = [
   { to: '/detection', icon: Leaf, label: 'Disease Detection' },
   { to: '/analytics', icon: BarChart2, label: 'Analytics' },
   { to: '/crop-recommendation', icon: Sprout, label: 'Crop Recommendation' },
+  { to: '/weather', icon: CloudRain, label: 'Weather Forecast' },
 ];
 
 export default function Layout() {

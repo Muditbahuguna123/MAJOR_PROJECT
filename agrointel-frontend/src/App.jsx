@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import Analytics from './pages/analytics';
 import Detection from './pages/detection';
 import CropRecommendation from './pages/crop-recommendation';
+import Weather from './pages/weather';
 import Settings from './pages/settings';
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="analytics" element={<Analytics />} />
           <Route path="detection" element={<Detection />} />
           <Route path="crop-recommendation" element={<CropRecommendation />} />
+          <Route path="weather" element={<Weather />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
