@@ -24,10 +24,6 @@ export const getSensorData = () => request('/sensor/latest');
 export const getSensorHistory = (limit = 50) =>
   request(`/sensor/history?limit=${limit}`);
 
-/** Trigger a new simulated sensor reading */
-export const simulateSensor = () =>
-  request('/sensor/simulate', { method: 'POST' });
-
 // ── ML Predictions ──────────────────────────────────────────────────────────
 
 /**
