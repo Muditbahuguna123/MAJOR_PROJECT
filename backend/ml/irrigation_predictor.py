@@ -2,8 +2,7 @@ import os
 import joblib
 
 BASE_DIR = os.path.dirname(__file__)
-ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))
-MODEL_PATH = os.path.join(ROOT_DIR, "ml", "irrigation_model.pkl")
+MODEL_PATH = os.path.join(BASE_DIR, "irrigation_model.pkl")
 
 _model = None
 

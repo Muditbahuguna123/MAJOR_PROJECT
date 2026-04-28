@@ -17,6 +17,8 @@ const MOCK_HISTORY = Array.from({ length: 30 }, (_, i) => ({
   soil_moisture: 45 + Math.sin(i * 0.5) * 10 + Math.random() * 4,
 }));
 
+const REFRESH_INTERVAL_MS = 5000;
+
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
@@ -94,9 +96,9 @@ export default function Dashboard() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // Auto-refresh every 30s
+  // Poll the backend every few seconds so the dashboard feels live.
   useEffect(() => {
-    const id = setInterval(fetchData, 30000);
+    const id = setInterval(fetchData, REFRESH_INTERVAL_MS);
     return () => clearInterval(id);
   }, [fetchData]);
 
