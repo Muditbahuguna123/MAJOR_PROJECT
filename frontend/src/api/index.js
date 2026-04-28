@@ -55,21 +55,7 @@ export const detectDisease = (file) => {
 
 // ── Analytics ────────────────────────────────────────────────────────────────
 
-export const getAnalytics = () => request('/analytics/summary');
+export const getAnalytics = () => request('/layer1-status');
 
 // ── System Logs ───────────────────────────────────────────────────────────────
 
-export const getLogs = (filter = 'ALL') =>
-  request(`/logs?filter=${filter}`);
-
-// ── Settings ──────────────────────────────────────────────────────────────────
-
-export const getProfile = () => request('/settings/profile');
-
-export const updateProfile = (data) =>
-  request('/settings/profile', { method: 'PUT', body: JSON.stringify(data) });
-
-export const getModelConfig = () => request('/settings/model-config');
-
-export const updateModelConfig = (data) =>
-  request('/settings/model-config', { method: 'PUT', body: JSON.stringify(data) });

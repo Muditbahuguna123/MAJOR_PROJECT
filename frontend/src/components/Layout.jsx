@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import {
-  LayoutDashboard, Leaf, BarChart2, Sprout, Settings, CloudRain
+  LayoutDashboard, Leaf, BarChart2, Sprout, CloudRain
 } from 'lucide-react';
 import './Layout.css';
 
@@ -39,15 +39,6 @@ export default function Layout() {
         </nav>
 
         <div className="sidebar-bottom">
-          <p className="nav-section-label">System</p>
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            <Settings size={16} />
-            <span>Settings</span>
-          </NavLink>
-
           <div className="sidebar-status">
             <span className="pulse-dot" />
             <span className="status-text">Backend connected</span>
