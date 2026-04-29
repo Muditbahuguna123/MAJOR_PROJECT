@@ -10,7 +10,7 @@ import StatCard from '../../components/StatCard';
 import { getSensorData, getSensorHistory, getCropRecommendation, getIrrigationPrediction } from '../../api';
 import './Dashboard.css';
 
-const REFRESH_INTERVAL_MS = 5000;
+const REFRESH_INTERVAL_MS = 3000;
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;

@@ -99,7 +99,6 @@ def _build_model(num_classes):
 def _load_checkpoint(model):
     checkpoint = torch.load(MODEL_PATH, map_location=_device)
 
-    # Support either raw state dict or wrapped checkpoints.
     if isinstance(checkpoint, dict) and "state_dict" in checkpoint:
         state_dict = checkpoint["state_dict"]
     elif isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
@@ -109,11 +108,10 @@ def _load_checkpoint(model):
     else:
         raise ValueError("Unsupported checkpoint format.")
 
-    # Common training wrappers prefix parameter keys with 'module.'.
     cleaned_state_dict = {}
     for key, value in state_dict.items():
         normalized_key = key.replace("module.", "", 1)
-        # Some MobileNetV2 training scripts wrap the final linear layer as classifier.1.1.
+
         normalized_key = normalized_key.replace("classifier.1.1.", "classifier.1.")
         cleaned_state_dict[normalized_key] = value
     model.load_state_dict(cleaned_state_dict, strict=True)

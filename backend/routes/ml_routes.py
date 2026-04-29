@@ -6,12 +6,6 @@ from ml.irrigation_predictor import predict_irrigation
 ml_bp = Blueprint("ml", __name__)
 
 
-def _to_float(value, field_name):
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        raise ValueError(f"Invalid numeric value for '{field_name}'")
-
 @ml_bp.route("/predict-crop", methods=["POST"])
 def predict_crop_api():
     data = request.json
@@ -28,54 +22,25 @@ def predict_crop_api():
 
     crop = predict_crop(features)
 
-    return jsonify({
-        "recommended_crop": crop
-    })
-
-
-@ml_bp.route("/ml/crop", methods=["POST"])
-def predict_crop_compat_api():
-    data = request.json or {}
-
-    try:
-        features = [
-            _to_float(data.get("N"), "N"),
-            _to_float(data.get("P"), "P"),
-            _to_float(data.get("K"), "K"),
-            _to_float(data.get("temperature"), "temperature"),
-            _to_float(data.get("humidity"), "humidity"),
-            _to_float(data.get("ph"), "ph"),
-            _to_float(data.get("rainfall"), "rainfall"),
-        ]
-    except ValueError as exc:
-        return jsonify({"error": str(exc)}), 400
-
-    crop = predict_crop(features)
     return jsonify({"crop": crop, "recommended_crop": crop})
 
 
 @ml_bp.route("/ml/irrigation", methods=["POST"])
 def predict_irrigation_frontend_api():
-    data = request.json or {}
+    data = request.json
 
-    try:
-        features = [
-            _to_float(data.get("temperature"), "temperature"),
-            _to_float(data.get("humidity"), "humidity"),
-            _to_float(data.get("soil_moisture"), "soil_moisture"),
-            _to_float(data.get("rainfall_mm", data.get("rainfall")), "rainfall_mm"),
-            _to_float(data.get("sunlight_hours"), "sunlight_hours"),
-            _to_float(data.get("wind_speed_kmh"), "wind_speed_kmh"),
-            _to_float(data.get("soil_ph"), "soil_ph"),
-        ]
-    except ValueError as exc:
-        return jsonify({"error": str(exc)}), 400
+    features = [
+        data["temperature"],
+        data["humidity"],
+        data["soil_moisture"],
+        data.get("rainfall_mm", data.get("rainfall")),
+        data["sunlight_hours"],
+        data["wind_speed_kmh"],
+        data["soil_ph"],
+    ]
 
-    try:
-        result = predict_irrigation(features)
-        return jsonify(result)
-    except Exception as exc:
-        return jsonify({"error": f"Irrigation prediction failed: {str(exc)}"}), 500
+    result = predict_irrigation(features)
+    return jsonify(result)
 
 
 @ml_bp.route("/disease/detect", methods=["POST"])
