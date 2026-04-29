@@ -26,7 +26,6 @@ def predict_irrigation(features):
     model = _load_model()
     prediction = model.predict([features])[0]
 
-    # Support both binary labels (Yes/No) and multi-class labels (High/Medium/Low).
     if isinstance(prediction, str):
         pred_text = prediction.strip()
         norm = pred_text.lower()

@@ -1,5 +1,3 @@
-// Centralized API layer for AgroIntel
-// All requests proxy through Vite to http://localhost:5000
 
 const BASE = '/api';
 
@@ -15,37 +13,17 @@ async function request(path, options = {}) {
   return res.json();
 }
 
-// ── Sensor / Dashboard ─────────────────────────────────────────────────────
-
-/** Fetch latest sensor reading (real DHT11 + simulated) */
 export const getSensorData = () => request('/sensor/latest');
 
-/** Fetch last N sensor readings for trend charts */
 export const getSensorHistory = (limit = 50) =>
   request(`/sensor/history?limit=${limit}`);
 
-// ── ML Predictions ──────────────────────────────────────────────────────────
-
-/**
- * Get crop recommendation
- * @param {Object} params - { N, P, K, temperature, humidity, ph, rainfall }
- */
 export const getCropRecommendation = (params) =>
-  request('/ml/crop', { method: 'POST', body: JSON.stringify(params) });
+  request('/predict-crop', { method: 'POST', body: JSON.stringify(params) });
 
-/**
- * Get irrigation prediction
- * @param {Object} params - { temperature, humidity, soil_moisture, rainfall, sunlight_hours, wind_speed_kmh, soil_ph }
- */
 export const getIrrigationPrediction = (params) =>
   request('/ml/irrigation', { method: 'POST', body: JSON.stringify(params) });
 
-// ── Disease Detection ────────────────────────────────────────────────────────
-
-/**
- * Upload leaf image for disease detection
- * @param {File} file - Image file
- */
 export const detectDisease = (file) => {
   const form = new FormData();
   form.append('image', file);
@@ -53,9 +31,5 @@ export const detectDisease = (file) => {
     .then((r) => r.json());
 };
 
-// ── Analytics ────────────────────────────────────────────────────────────────
-
 export const getAnalytics = () => request('/layer1-status');
-
-// ── System Logs ───────────────────────────────────────────────────────────────
 
