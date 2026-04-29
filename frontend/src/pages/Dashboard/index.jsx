@@ -10,12 +10,7 @@ import StatCard from '../../components/StatCard';
 import { getSensorData, getSensorHistory, getCropRecommendation, getIrrigationPrediction } from '../../api';
 import './Dashboard.css';
 
-const MOCK_HISTORY = Array.from({ length: 30 }, (_, i) => ({
-  time: `${i * 10}m`,
-  temperature: 24 + Math.sin(i * 0.4) * 6 + Math.random() * 2,
-  humidity: 62 + Math.cos(i * 0.3) * 12 + Math.random() * 3,
-  soil_moisture: 45 + Math.sin(i * 0.5) * 10 + Math.random() * 4,
-}));
+const REFRESH_INTERVAL_MS = 3000;
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -33,60 +28,59 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function Dashboard() {
   const [sensor, setSensor] = useState(null);
-  const [history, setHistory] = useState(MOCK_HISTORY);
+  const [history, setHistory] = useState([]);
   const [prediction, setPrediction] = useState(null);
   const [irrigation, setIrrigation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
+    setLoading(true);
     try {
       setError(null);
-      const [sensorRes, histRes] = await Promise.all([
+      const [sensorResult, histResult] = await Promise.allSettled([
         getSensorData(),
         getSensorHistory(40),
       ]);
-      setSensor(sensorRes);
-      if (histRes?.length) setHistory(histRes);
 
-      // Run ML predictions with sensor data
-      const d = sensorRes;
-      const [cropRes, irrRes] = await Promise.all([
-        getCropRecommendation({
-          N: d.nitrogen ?? 50,
-          P: d.phosphorus ?? 40,
-          K: d.potassium ?? 35,
-          temperature: d.temperature,
-          humidity: d.humidity,
-          ph: d.soil_ph,
-          rainfall: d.rainfall_mm,
-        }),
-        getIrrigationPrediction({
-          temperature: d.temperature,
-          humidity: d.humidity,
-          soil_moisture: d.soil_moisture,
-          rainfall: d.rainfall_mm,
-          sunlight_hours: d.sunlight_hours,
-          wind_speed_kmh: d.wind_speed_kmh,
-          soil_ph: d.soil_ph,
-        }),
-      ]);
-      setPrediction(cropRes);
-      setIrrigation(irrRes);
-    } catch (e) {
-      setError(e.message);
-      // Use mock data so the UI is still usable
-      setSensor({
-        temperature: 28.4,
-        humidity: 67,
-        soil_moisture: 42,
-        rainfall_mm: 12,
-        sunlight_hours: 6.5,
-        wind_speed_kmh: 14,
-        soil_ph: 6.8,
-      });
-      setPrediction({ crop: 'Wheat', confidence: 0.91 });
-      setIrrigation({ irrigation_needed: false, confidence: 0.87 });
+      if (sensorResult.status === 'fulfilled') {
+        const sensorRes = sensorResult.value;
+        setSensor(sensorRes);
+
+        const [cropRes, irrRes] = await Promise.all([
+          getCropRecommendation({
+            N: sensorRes.nitrogen ?? 50,
+            P: sensorRes.phosphorus ?? 40,
+            K: sensorRes.potassium ?? 35,
+            temperature: sensorRes.temperature,
+            humidity: sensorRes.humidity,
+            ph: sensorRes.soil_ph,
+            rainfall: sensorRes.rainfall_mm,
+          }),
+          getIrrigationPrediction({
+            temperature: sensorRes.temperature,
+            humidity: sensorRes.humidity,
+            soil_moisture: sensorRes.soil_moisture,
+            rainfall: sensorRes.rainfall_mm,
+            sunlight_hours: sensorRes.sunlight_hours,
+            wind_speed_kmh: sensorRes.wind_speed_kmh,
+            soil_ph: sensorRes.soil_ph,
+          }),
+        ]);
+        setPrediction(cropRes);
+        setIrrigation(irrRes);
+      } else {
+        setSensor(null);
+        setPrediction(null);
+        setIrrigation(null);
+        setError(sensorResult.reason?.message || 'No sensor data available');
+      }
+
+      if (histResult.status === 'fulfilled' && histResult.value?.length) {
+        setHistory(histResult.value);
+      } else if (histResult.status === 'fulfilled') {
+        setHistory([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -94,9 +88,9 @@ export default function Dashboard() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // Auto-refresh every 30s
+  // Poll the backend every few seconds so the dashboard feels live.
   useEffect(() => {
-    const id = setInterval(fetchData, 30000);
+    const id = setInterval(fetchData, REFRESH_INTERVAL_MS);
     return () => clearInterval(id);
   }, [fetchData]);
 
@@ -117,7 +111,7 @@ export default function Dashboard() {
       {error && (
         <div className="error-banner">
           <AlertTriangle size={14} />
-          Backend unreachable — showing demo data. Start Flask with <code>python app.py</code>
+          {error}
         </div>
       )}
 
@@ -176,22 +170,30 @@ export default function Dashboard() {
       {/* Trend Chart */}
       <h2 className="section-title">Trends — Last 7 Days</h2>
       <div className="card chart-card">
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={history} margin={{ top: 8, right: 12, bottom: 0, left: -20 }}>
-            <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="time" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
-            <Line type="monotone" dataKey="temperature" stroke="var(--amber)" strokeWidth={1.5} dot={false} name="Temp (°C)" />
-            <Line type="monotone" dataKey="humidity" stroke="var(--blue)" strokeWidth={1.5} dot={false} name="Humidity (%)" />
-            <Line type="monotone" dataKey="soil_moisture" stroke="var(--green)" strokeWidth={1.5} dot={false} name="Soil Moisture (%)" />
-          </LineChart>
-        </ResponsiveContainer>
-        <div className="chart-legend">
-          <span style={{ color: 'var(--amber)' }}>● Temp (°C)</span>
-          <span style={{ color: 'var(--blue)' }}>● Humidity (%)</span>
-          <span style={{ color: 'var(--green)' }}>● Soil Moisture (%)</span>
-        </div>
+        {history.length > 0 ? (
+          <>
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={history} margin={{ top: 8, right: 12, bottom: 0, left: -20 }}>
+                <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="time" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Line type="monotone" dataKey="temperature" stroke="var(--amber)" strokeWidth={1.5} dot={false} name="Temp (°C)" />
+                <Line type="monotone" dataKey="humidity" stroke="var(--blue)" strokeWidth={1.5} dot={false} name="Humidity (%)" />
+                <Line type="monotone" dataKey="soil_moisture" stroke="var(--green)" strokeWidth={1.5} dot={false} name="Soil Moisture (%)" />
+              </LineChart>
+            </ResponsiveContainer>
+            <div className="chart-legend">
+              <span style={{ color: 'var(--amber)' }}>● Temp (°C)</span>
+              <span style={{ color: 'var(--blue)' }}>● Humidity (%)</span>
+              <span style={{ color: 'var(--green)' }}>● Soil Moisture (%)</span>
+            </div>
+          </>
+        ) : (
+          <div className="log-empty">
+            <p>No sensor history available yet.</p>
+          </div>
+        )}
       </div>
     </div>
   );
