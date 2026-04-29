@@ -6,10 +6,10 @@ import './Layout.css';
 
 const NAV = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/weather', icon: CloudRain, label: 'Weather Forecast' },
+  { to: '/detection', icon: Leaf, label: 'Disease Detection' },
   { to: '/analytics', icon: BarChart2, label: 'Analytics' },
   { to: '/crop-recommendation', icon: Sprout, label: 'Crop Recommendation' },
-  { to: '/detection', icon: Leaf, label: 'Disease Detection' },
+  { to: '/weather', icon: CloudRain, label: 'Weather Forecast' },
 ];
 
 export default function Layout() {

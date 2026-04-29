@@ -3,7 +3,7 @@ import {
   AreaChart, Area, BarChart, Bar,
   LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Legend, Cell
+  ResponsiveContainer, Legend
 } from 'recharts';
 import { getAnalytics, getSensorHistory } from '../../api';
 import './Analytics.css';
@@ -23,11 +23,6 @@ const MOCK_WEEKLY = Array.from({ length: 7 }, (_, i) => {
   };
 });
 
-const MOCK_IRRIGATION = [
-  { label: 'Yes', count: 18 },
-  { label: 'No', count: 30 },
-];
-
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
@@ -44,7 +39,6 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function Analytics() {
   const [weeklyData, setWeeklyData] = useState(MOCK_WEEKLY);
-  const [irrigationDist, setIrrigationDist] = useState(MOCK_IRRIGATION);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,16 +57,6 @@ export default function Analytics() {
             soil_ph: d.soil_ph,
           }));
           setWeeklyData(mapped);
-
-          // Compute irrigation distribution from full history
-          const yes = history.filter(d => d.irrigation_need === 'Yes').length;
-          const no = history.filter(d => d.irrigation_need === 'No').length;
-          if (yes + no > 0) {
-            setIrrigationDist([
-              { label: 'Yes', count: yes },
-              { label: 'No', count: no },
-            ]);
-          }
         }
       } catch {
         // use mock data
@@ -86,33 +70,11 @@ export default function Analytics() {
   const avg = (key) =>
     (weeklyData.reduce((a, d) => a + (d[key] || 0), 0) / weeklyData.length).toFixed(1);
 
-  const totalIrrigation = irrigationDist.reduce((a, d) => a + d.count, 0);
-  const irrigationYesPct = totalIrrigation > 0
-    ? Math.round((irrigationDist.find(d => d.label === 'Yes')?.count || 0) / totalIrrigation * 100)
-    : 0;
-  const irrigationYesCount = irrigationDist.find(d => d.label === 'Yes')?.count ?? 3;
-
   return (
     <div className="fade-up">
       <div className="page-header">
         <h1 className="page-title">Analytics</h1>
         <p className="page-subtitle">Real-time prediction metrics from your backend</p>
-      </div>
-
-      {/* KPI Row */}
-      <div className="kpi-row">
-        {[
-          { label: 'Predictions Today', value: '48', sub: '+12 from yesterday' },
-          { label: 'Model Accuracy', value: '93.2%', sub: 'Random Forest' },
-          { label: 'Avg Soil Moisture', value: `${avg('soil_moisture')}%`, sub: 'Last 7 days' },
-          { label: 'Irrigation Alerts', value: `${irrigationYesCount}`, sub: 'This week' },
-        ].map(({ label, value, sub }) => (
-          <div key={label} className="kpi-card card">
-            <div className="kpi-value">{value}</div>
-            <div className="kpi-label">{label}</div>
-            <div className="kpi-sub">{sub}</div>
-          </div>
-        ))}
       </div>
 
       {/* Row 1 — Temperature & Humidity | Soil Moisture & Rainfall */}
@@ -230,46 +192,25 @@ export default function Analytics() {
         </div>
 
         <div className="card">
-          <h3 className="chart-title">Irrigation Need Distribution</h3>
-          <div className="irrigation-summary">
-            <div className="irr-ring-wrap">
-              <svg viewBox="0 0 80 80" className="irr-ring">
-                <circle cx="40" cy="40" r="32" fill="none" stroke="var(--border)" strokeWidth="8" />
-                <circle
-                  cx="40" cy="40" r="32"
-                  fill="none"
-                  stroke="var(--green)"
-                  strokeWidth="8"
-                  strokeDasharray={`${irrigationYesPct * 2.01} 201`}
-                  strokeLinecap="round"
-                  transform="rotate(-90 40 40)"
-                />
-                <text x="40" y="37" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--text-primary)">{irrigationYesPct}%</text>
-                <text x="40" y="51" textAnchor="middle" fontSize="7" fill="var(--text-muted)">need irr.</text>
-              </svg>
-            </div>
-            <div className="irr-stats">
-              {irrigationDist.map((item, i) => (
-                <div key={item.label} className="irr-stat-row">
-                  <span className="irr-dot" style={{ background: i === 0 ? 'var(--green)' : 'var(--border)' }} />
-                  <span className="irr-label">Irrigation {item.label}</span>
-                  <span className="irr-count">{item.count} readings</span>
-                </div>
-              ))}
-              <div className="irr-sub">Based on last {totalIrrigation} sensor readings</div>
-            </div>
+          <h3 className="chart-title">Avg Soil Moisture</h3>
+          <div className="chart-stat-badge">
+            <span className="chart-stat-val" style={{ color: 'var(--green)' }}>{avg('soil_moisture')}%</span>
+            <span className="chart-stat-unit">avg / last 7 days</span>
           </div>
-          <ResponsiveContainer width="100%" height={120}>
-            <BarChart data={irrigationDist} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={weeklyData} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
+              <defs>
+                <linearGradient id="soilGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--green)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
               <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="day" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} domain={[0, 100]} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" radius={[4, 4, 0, 0]} name="Readings">
-                <Cell fill="var(--green)" />
-                <Cell fill="var(--text-muted)" opacity={0.4} />
-              </Bar>
-            </BarChart>
+              <Area type="monotone" dataKey="soil_moisture" stroke="var(--green)" fill="url(#soilGrad)" strokeWidth={2} name="Soil Moisture %" dot={{ fill: 'var(--green)', r: 3 }} />
+            </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
